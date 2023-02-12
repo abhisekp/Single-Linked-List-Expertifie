@@ -41,6 +41,51 @@ func TestLinkedList(t *testing.T) {
 		}
 	})
 
+	t.Run("Check Mid", func(t *testing.T) {
+		midNode := &Node[int]{Data: 2}
+
+		cases := []struct {
+			name     string
+			input    *LinkedList[int]
+			expected *Node[int]
+		}{
+			{
+				name:     "Empty",
+				input:    &LinkedList[int]{},
+				expected: nil,
+			},
+			{
+				name:     "Single Node",
+				input:    (&LinkedList[int]{}).Insert(midNode),
+				expected: midNode,
+			},
+			{
+				name:     "Two Nodes",
+				input:    (&LinkedList[int]{}).Insert(midNode).Insert(&Node[int]{Data: 2}),
+				expected: midNode,
+			},
+			{
+				name:     "Odd Multiple Nodes",
+				input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}),
+				expected: midNode,
+			},
+			{
+				name:     "Even Multiple Nodes",
+				input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}).Insert(&Node[int]{Data: 4}),
+				expected: midNode,
+			},
+		}
+
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				actual := c.input.Mid()
+				if actual != c.expected {
+					t.Errorf("Expected %v, got %v", c.expected, actual)
+				}
+			})
+		}
+	})
+
 	t.Run("Check Equal", func(t *testing.T) {
 		cases := []struct {
 			name     string
