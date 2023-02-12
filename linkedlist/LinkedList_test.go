@@ -42,38 +42,49 @@ func TestLinkedList(t *testing.T) {
 	})
 
 	t.Run("Check Mid", func(t *testing.T) {
-		midNode := &Node[int]{Data: 2}
-
-		cases := []struct {
+		type Case struct {
 			name     string
 			input    *LinkedList[int]
 			expected *Node[int]
-		}{
+		}
+		cases := []Case{
 			{
 				name:     "Empty",
 				input:    &LinkedList[int]{},
 				expected: nil,
 			},
-			{
-				name:     "Single Node",
-				input:    (&LinkedList[int]{}).Insert(midNode),
-				expected: midNode,
-			},
-			{
-				name:     "Two Nodes",
-				input:    (&LinkedList[int]{}).Insert(midNode).Insert(&Node[int]{Data: 2}),
-				expected: midNode,
-			},
-			{
-				name:     "Odd Multiple Nodes",
-				input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}),
-				expected: midNode,
-			},
-			{
-				name:     "Even Multiple Nodes",
-				input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}).Insert(&Node[int]{Data: 4}),
-				expected: midNode,
-			},
+			func() Case {
+				midNode := &Node[int]{Data: 2}
+				return Case{
+					name:     "Single Node",
+					input:    (&LinkedList[int]{}).Insert(midNode),
+					expected: midNode,
+				}
+			}(),
+			func() Case {
+				midNode := &Node[int]{Data: 2}
+				return Case{
+					name:     "Two Nodes",
+					input:    (&LinkedList[int]{}).Insert(midNode).Insert(&Node[int]{Data: 2}),
+					expected: midNode,
+				}
+			}(),
+			func() Case {
+				midNode := &Node[int]{Data: 2}
+				return Case{
+					name:     "Odd Multiple Nodes",
+					input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}),
+					expected: midNode,
+				}
+			}(),
+			func() Case {
+				midNode := &Node[int]{Data: 2}
+				return Case{
+					name:     "Even Multiple Nodes",
+					input:    (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(midNode).Insert(&Node[int]{Data: 3}).Insert(&Node[int]{Data: 4}),
+					expected: midNode,
+				}
+			}(),
 		}
 
 		for _, c := range cases {
@@ -268,20 +279,18 @@ func TestLinkedList(t *testing.T) {
 				input2:   (&LinkedList[int]{}).Insert(&Node[int]{Data: 4}).Insert(&Node[int]{Data: 5}),
 				expected: 5,
 			},
+			func() Case {
+				ll1 := (&LinkedList[int]{}).Insert(&Node[int]{Data: 4}).Insert(&Node[int]{Data: 5}).Insert(&Node[int]{Data: 6})
+				llTmp := (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(&Node[int]{Data: 2}).Insert(&Node[int]{Data: 3})
+				ll2, _ := llTmp.SplitBy(llTmp.Mid())
+				return Case{
+					name:     "Splited",
+					input1:   ll1,
+					input2:   ll2,
+					expected: 5,
+				}
+			}(),
 		}
-
-		(func() {
-			ll1 := (&LinkedList[int]{}).Insert(&Node[int]{Data: 4}).Insert(&Node[int]{Data: 5}).Insert(&Node[int]{Data: 6})
-			llTmp := (&LinkedList[int]{}).Insert(&Node[int]{Data: 1}).Insert(&Node[int]{Data: 2}).Insert(&Node[int]{Data: 3})
-			ll2, _ := llTmp.SplitBy(llTmp.Mid())
-
-			cases = append(cases, Case{
-				name:     "Splited",
-				input1:   ll1,
-				input2:   ll2,
-				expected: 5,
-			})
-		})()
 
 		for _, c := range cases {
 			t.Run(c.name, func(t *testing.T) {
