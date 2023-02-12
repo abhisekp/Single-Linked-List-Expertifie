@@ -5,7 +5,7 @@ import "fmt"
 type Node[T any] struct {
 	_    struct{}
 	Data T
-	next *Node[T]
+	Next *Node[T]
 }
 
 func (n *Node[T]) String() string {
